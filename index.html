@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CHROMATIC - Skeuomorphic Color Picker">
+    <title>CHROMATIC - Color Picker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
+        header { text-align: center; color: white; margin-bottom: 50px; padding-top: 20px; }
+        .logo { font-size: 3em; font-weight: bold; letter-spacing: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .tagline { font-size: 1.3em; margin-top: 15px; opacity: 0.95; }
+        .desc { margin-top: 12px; opacity: 0.85; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        .lang-switch:hover { background: rgba(255,255,255,0.35); transform: scale(1.05); }
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+        }
+        h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        .section { margin-bottom: 45px; }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .feature {
+            background: linear-gradient(135deg, #f8f9fc 0%, #eef1f5 100%);
+            padding: 25px 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(102,126,234,0.15); }
+        .feature-icon { font-size: 2.2em; margin-bottom: 12px; }
+        .feature-title { font-weight: bold; color: #667eea; font-size: 1.05em; }
+        .feature-desc { color: #666; font-size: 0.9em; margin-top: 8px; }
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .screenshot-item {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+            transition: transform 0.3s;
+        }
+        .screenshot-item:hover { transform: scale(1.03); }
+        .screenshot-item img { width: 100%; height: auto; display: block; }
+        .tech-section { text-align: center; }
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .tech-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.95em;
+        }
+        .contact {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .contact h2 { color: white; text-align: center; }
+        .contact h2::after { left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.5); }
+        .contact-email {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 15px 30px;
+            border-radius: 30px;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .contact-email:hover { background: rgba(255,255,255,0.25); }
+        .contact a { color: white; text-decoration: none; font-size: 1.1em; }
+        footer { text-align: center; color: white; padding: 35px; opacity: 0.85; }
+        @media (max-width: 600px) {
+            .content { padding: 30px 20px; }
+            .logo { font-size: 2.2em; }
+            .features { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switch" onclick="toggleLang()">EN / 中</div>
+    <div class="container">
+        <header>
+            <div class="logo">CHROMATIC</div>
+            <div class="tagline" id="tagline">拟物风格颜色选择器</div>
+            <div class="desc" id="desc">精致的拟物化设计，支持 HEX、RGB、HSL 多种颜色格式，让选色成为一种享受</div>
+        </header>
+        <div class="content">
+            <section class="section">
+                <h2 id="featuresTitle">功能特性</h2>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-title" data-zh="拟物设计" data-en="Skeuomorphic">拟物设计</div>
+                        <div class="feature-desc" data-zh="金属质感与复古LCD" data-en="Metal texture & retro LCD">金属质感与复古LCD</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🌈</div>
+                        <div class="feature-title" data-zh="多格式支持" data-en="Multi-format">多格式支持</div>
+                        <div class="feature-desc" data-zh="HEX / RGB / HSL" data-en="HEX / RGB / HSL">HEX / RGB / HSL</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-title" data-zh="精准选色" data-en="Precise Picking">精准选色</div>
+                        <div class="feature-desc" data-zh="色盘+色相+RGB滑块" data-en="Palette + Hue + RGB">色盘+色相+RGB滑块</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📋</div>
+                        <div class="feature-title" data-zh="一键复制" data-en="Quick Copy">一键复制</div>
+                        <div class="feature-desc" data-zh="快速复制颜色值" data-en="Copy color values">快速复制颜色值</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-title" data-zh="中英双语" data-en="Bilingual">中英双语</div>
+                        <div class="feature-desc" data-zh="界面语言切换" data-en="Language switch">界面语言切换</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-title" data-zh="跨平台" data-en="Cross-platform">跨平台</div>
+                        <div class="feature-desc" data-zh="iOS / Android / H5" data-en="iOS / Android / H5">iOS / Android / H5</div>
+                    </div>
+                </div>
+            </section>
+            <section class="section">
+                <h2 id="screenshotsTitle">应用截图</h2>
+                <div class="screenshots">
+                    <div class="screenshot-item"><img src="screenshots/screenshot-1-red.png" alt="Red"></div>
+                    <div class="screenshot-item"><img src="screenshots/screenshot-2-blue.png" alt="Blue"></div>
+                    <div class="screenshot-item"><img src="screenshots/screenshot-3-green.png" alt="Green"></div>
+                    <div class="screenshot-item"><img src="screenshots/screenshot-4-purple.png" alt="Purple"></div>
+                </div>
+            </section>
+            <section class="section tech-section">
+                <h2 id="techTitle" style="text-align:center;">技术栈</h2>
+                <div class="tech-tags">
+                    <span class="tech-tag">Vue 3</span>
+                    <span class="tech-tag">uni-app</span>
+                    <span class="tech-tag">Vite</span>
+                    <span class="tech-tag">CSS3</span>
+                </div>
+            </section>
+            <section class="contact">
+                <h2 id="contactTitle">联系方式</h2>
+                <div class="contact-email">
+                    <a href="mailto:xp120214@gmail.com">📧 xp120214@gmail.com</a>
+                </div>
+            </section>
+        </div>
+        <footer>
+            <p>© 2026 CHROMATIC</p>
+        </footer>
+    </div>
+    <script>
+        let lang = 'zh';
+        const texts = {
+            zh: {
+                tagline: '拟物风格颜色选择器',
+                desc: '精致的拟物化设计，支持 HEX、RGB、HSL 多种颜色格式，让选色成为一种享受',
+                features: '功能特性',
+                screenshots: '应用截图',
+                tech: '技术栈',
+                contact: '联系方式'
+            },
+            en: {
+                tagline: 'Skeuomorphic Color Picker',
+                desc: 'Elegant skeuomorphic design with HEX, RGB, HSL support. Make color picking a pleasure.',
+                features: 'Features',
+                screenshots: 'Screenshots',
+                tech: 'Tech Stack',
+                contact: 'Contact'
+            }
+        };
+        function toggleLang() {
+            lang = lang === 'zh' ? 'en' : 'zh';
+            document.getElementById('tagline').textContent = texts[lang].tagline;
+            document.getElementById('desc').textContent = texts[lang].desc;
+            document.getElementById('featuresTitle').textContent = texts[lang].features;
+            document.getElementById('screenshotsTitle').textContent = texts[lang].screenshots;
+            document.getElementById('techTitle').textContent = texts[lang].tech;
+            document.getElementById('contactTitle').textContent = texts[lang].contact;
+            document.querySelectorAll('.feature-title, .feature-desc').forEach(el => {
+                if (el.getAttribute('data-' + lang)) {
+                    el.textContent = el.getAttribute('data-' + lang);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
