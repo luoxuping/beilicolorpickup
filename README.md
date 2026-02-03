@@ -1,2 +1,2 @@
-# beilicolorpickup
+# beilicolorpicker
 My App Support Page
